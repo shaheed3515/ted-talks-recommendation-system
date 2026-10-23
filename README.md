@@ -119,9 +119,18 @@ python src/preprocess.py
 python src/visualize_data_quality.py
 ```
 
-### 5. Launch the Jupyter Notebook
+### 5. Run the Recommendation Engine
 ```bash
+python src/recommend.py
+```
+
+### 6. Launch Jupyter Notebooks
+```bash
+# Notebook 1: Data Preprocessing & EDA
 jupyter notebook notebooks/01_data_preprocessing.ipynb
+
+# Notebook 2: TF-IDF Feature Engineering & Recommendations
+jupyter notebook notebooks/02_feature_engineering_and_recommendation.ipynb
 ```
 
 ---
@@ -129,7 +138,7 @@ jupyter notebook notebooks/01_data_preprocessing.ipynb
 ## 🗺️ Project Milestones Roadmap
 
 - [x] **Milestone 1 (Weeks 1–2):** Data Collection, Cleaning, Quality Dimensions Audit & EDA.
-- [ ] **Milestone 2 (Weeks 3–4):** Feature Engineering (TF-IDF & Embeddings) & Recommendation Engine Development.
+- [x] **Milestone 2 (Weeks 3–4):** Feature Engineering (TF-IDF & Embeddings) & Recommendation Engine Development.
 - [ ] **Milestone 3 (Weeks 5–6):** Offline Evaluation Metrics (Precision@K, Recall@K, NDCG, MAP).
 - [ ] **Milestone 4 (Weeks 7–8):** Interactive Streamlit Web App Deployment & Project Presentation.
 
