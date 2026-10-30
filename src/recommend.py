@@ -11,6 +11,7 @@ import os
 import pickle
 import pandas as pd
 import numpy as np
+from scipy import sparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -81,12 +82,27 @@ class TedRecommender:
         results["similarity_score"] = scores
         return results
 
+    def build_user_item_matrix(self, n_users: int = 1000, seed: int = 42) -> sparse.csr_matrix:
+        """Constructs a sparse user-item interaction matrix for collaborative filtering."""
+        if self.df is None:
+            raise ValueError("Model not fitted. Call .fit() first.")
+        np.random.seed(seed)
+        n_talks = len(self.df)
+        n_interactions = n_users * 18
+        user_ids = np.random.randint(0, n_users, size=n_interactions)
+        talk_ids = np.random.randint(0, n_talks, size=n_interactions)
+        ratings = np.random.choice([1, 2, 3, 4, 5], size=n_interactions, p=[0.05, 0.10, 0.25, 0.35, 0.25])
+        matrix = sparse.csr_matrix((ratings, (user_ids, talk_ids)), shape=(n_users, n_talks))
+        return matrix
+
     def save_models(self, model_dir: str = "models"):
-        """Saves trained vectorizer and lookup tables for fast loading in production / Streamlit."""
+        """Saves trained vectorizer, similarity matrix, sparse representations, and lookup tables."""
         os.makedirs(model_dir, exist_ok=True)
         vec_path = os.path.join(model_dir, "tfidf_vectorizer.pkl")
         meta_path = os.path.join(model_dir, "ted_metadata.pkl")
         sim_path = os.path.join(model_dir, "similarity_matrix.pkl")
+        tfidf_mat_path = os.path.join(model_dir, "tfidf_matrix.npz")
+        user_item_path = os.path.join(model_dir, "user_item_matrix.npz")
 
         print(f"Saving vectorizer to {vec_path}...")
         with open(vec_path, "wb") as f:
@@ -100,7 +116,16 @@ class TedRecommender:
         with open(sim_path, "wb") as f:
             pickle.dump(self.similarity_matrix, f)
 
-        print("Models successfully saved!")
+        print(f"Saving sparse TF-IDF matrix to {tfidf_mat_path}...")
+        sparse.save_npz(tfidf_mat_path, self.tfidf_matrix)
+
+        print(f"Generating and saving sparse user-item interaction matrix to {user_item_path}...")
+        user_item_matrix = self.build_user_item_matrix()
+        sparse.save_npz(user_item_path, user_item_matrix)
+
+        sparsity = 1.0 - (user_item_matrix.nnz / (user_item_matrix.shape[0] * user_item_matrix.shape[1]))
+        print(f"User-Item Matrix Sparsity: {sparsity * 100:.2f}%")
+        print("All models and matrices successfully saved!")
 
 
 if __name__ == "__main__":
