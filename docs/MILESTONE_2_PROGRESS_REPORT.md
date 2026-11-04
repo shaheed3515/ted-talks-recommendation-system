@@ -164,3 +164,4 @@ All 5 required model artifacts have been generated, tested, and saved in `models
 
 ## 6. Conclusion
 Milestone 2 (Modules 3 & 4) has satisfied all requirements outlined in the project syllabus. The system features a fully verified, interpretable, and reproducible vectorization and recommendation engine, documented in [notebooks/02_feature_engineering_and_recommendation.ipynb](notebooks/02_feature_engineering_and_recommendation.ipynb) and ready for jury review and web deployment.
+
