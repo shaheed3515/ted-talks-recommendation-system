@@ -25,3 +25,5 @@ data/processed/*.csv
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 models/*.pkl
+models/*.npz
+!models/.gitkeep
