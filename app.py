@@ -2,7 +2,7 @@
 Personalized TED Talks Recommendation System
 Module 6: Production Web Application Deployment via Streamlit
 Infosys Springboard AI/ML Internship Program
-Student: Mohammed Shaheed (student/shaheed3515)
+Student: Shaheed Shaik (student/shaheed3515)
 """
 
 import os
@@ -27,51 +27,56 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS STYLING (TED Red #E62B1E & Modern Dark Theme)
+# 2. CUSTOM CSS STYLING (Clean Light / Warm Cream & TED Red Palette)
 # ==============================================================================
 CUSTOM_CSS = """
 <style>
-    /* Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-    html, body, [class*="css"] {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    html, body, [class*="css"], .stMarkdown {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #1E293B;
     }
 
-    /* Main Container Padding */
+    /* Main Container */
     .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
+        padding-top: 1.2rem;
+        padding-bottom: 2.5rem;
         max-width: 1250px;
     }
 
-    /* Header Styling */
-    .ted-brand {
+    /* Top Header Section */
+    .ted-brand-wrapper {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 4px;
+        gap: 14px;
+        margin-bottom: 6px;
     }
     .ted-logo-badge {
-        background-color: #E62B1E;
-        color: #ffffff;
+        background: linear-gradient(135deg, #E62B1E 0%, #BA1B10 100%);
+        color: #FFFFFF !important;
         font-weight: 900;
-        font-size: 1.6rem;
-        padding: 4px 12px;
-        border-radius: 6px;
+        font-size: 1.7rem;
+        padding: 5px 14px;
+        border-radius: 8px;
         letter-spacing: -0.5px;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(230, 43, 30, 0.25);
     }
     .ted-title-text {
-        font-size: 1.8rem;
+        font-size: 1.85rem;
         font-weight: 800;
-        color: #FFFFFF;
-        letter-spacing: -0.5px;
+        color: #0F172A !important;
+        letter-spacing: -0.6px;
+        line-height: 1.2;
     }
     .ted-subtitle {
-        color: #9CA3AF;
-        font-size: 0.95rem;
+        color: #64748B;
+        font-size: 0.96rem;
         margin-bottom: 1.2rem;
+        line-height: 1.5;
     }
 
     /* KPI Stats Bar */
@@ -79,175 +84,232 @@ CUSTOM_CSS = """
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.6rem;
     }
     .stat-pill {
-        background-color: #1F242C;
-        border: 1px solid #374151;
-        border-radius: 20px;
-        padding: 5px 14px;
-        font-size: 0.8rem;
-        color: #E5E7EB;
+        background-color: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 9999px;
+        padding: 6px 16px;
+        font-size: 0.82rem;
+        color: #334155;
+        font-weight: 500;
         display: flex;
         align-items: center;
         gap: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .stat-pill b {
         color: #E62B1E;
+        font-weight: 700;
     }
 
-    /* Seed Talk Card */
+    /* Input Seed Talk Card */
     .seed-card {
-        background: linear-gradient(135deg, #1E232B 0%, #15181E 100%);
-        border: 1.5px solid #E62B1E;
-        border-radius: 12px;
-        padding: 16px 20px;
-        margin-bottom: 1.8rem;
-        box-shadow: 0 4px 14px rgba(230, 43, 30, 0.15);
+        background: linear-gradient(135deg, #FFF8F8 0%, #FFFFFF 100%);
+        border: 1.5px solid #FCA5A5;
+        border-radius: 14px;
+        padding: 20px 24px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(230, 43, 30, 0.08);
     }
     .seed-badge {
         background-color: #E62B1E;
-        color: white;
+        color: #FFFFFF !important;
         font-size: 0.72rem;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 4px;
+        font-weight: 800;
+        padding: 3px 10px;
+        border-radius: 6px;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
         display: inline-block;
+        margin-bottom: 8px;
+    }
+    .seed-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #0F172A;
         margin-bottom: 6px;
+        line-height: 1.3;
+    }
+    .seed-speaker {
+        color: #475569;
+        font-size: 0.92rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .seed-desc {
+        color: #475569;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        margin-bottom: 12px;
     }
 
-    /* Recommendation Cards */
+    /* Recommendation Cards (Clean White / Light Surface) */
     .rec-card {
-        background: #181C23;
-        border: 1px solid #2D3748;
-        border-radius: 12px;
-        padding: 16px;
-        margin-bottom: 14px;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 16px;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
     .rec-card:hover {
-        transform: translateY(-3px);
+        transform: translateY(-4px);
         border-color: #E62B1E;
-        box-shadow: 0 8px 24px rgba(230, 43, 30, 0.2);
+        box-shadow: 0 12px 24px -4px rgba(230, 43, 30, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
     }
     .rec-header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 8px;
+        align-items: center;
+        margin-bottom: 10px;
     }
     .rec-rank {
-        background-color: #2D3748;
-        color: #E5E7EB;
+        background-color: #F1F5F9;
+        color: #475569;
         font-weight: 700;
-        font-size: 0.75rem;
-        padding: 2px 7px;
-        border-radius: 4px;
-    }
-    .rec-score-badge {
-        background-color: rgba(230, 43, 30, 0.15);
-        color: #FF5A4E;
-        border: 1px solid rgba(230, 43, 30, 0.4);
-        font-weight: 700;
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         padding: 3px 8px;
         border-radius: 6px;
+        border: 1px solid #E2E8F0;
+    }
+    .rec-score-badge {
+        background-color: #FEF2F2;
+        color: #DC2626;
+        border: 1px solid #FCA5A5;
+        font-weight: 700;
+        font-size: 0.78rem;
+        padding: 3px 10px;
+        border-radius: 9999px;
     }
     .rec-title {
         font-size: 1.05rem;
         font-weight: 700;
-        color: #F9FAFB;
+        color: #0F172A;
         line-height: 1.35;
         margin-bottom: 6px;
+        min-height: 44px;
     }
     .rec-speaker {
-        color: #D1D5DB;
-        font-size: 0.86rem;
+        color: #475569;
+        font-size: 0.88rem;
+        font-weight: 600;
         margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
     }
     .rec-meta {
         display: flex;
-        gap: 12px;
-        color: #9CA3AF;
-        font-size: 0.78rem;
+        gap: 14px;
+        color: #64748B;
+        font-size: 0.8rem;
         margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #F1F5F9;
     }
     .rec-desc {
-        color: #9CA3AF;
-        font-size: 0.82rem;
-        line-height: 1.4;
+        color: #475569;
+        font-size: 0.83rem;
+        line-height: 1.5;
         margin-bottom: 12px;
-        flex-grow: 1;
+        min-height: 55px;
     }
+
+    /* Tag Styling */
     .tag-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 5px;
+        gap: 6px;
         margin-bottom: 12px;
     }
     .tag-pill {
-        background-color: #262C36;
-        color: #D1D5DB;
-        font-size: 0.7rem;
-        padding: 2px 8px;
-        border-radius: 4px;
-        border: 1px solid #374151;
+        background-color: #F8FAFC;
+        color: #475569;
+        font-size: 0.72rem;
+        font-weight: 500;
+        padding: 3px 9px;
+        border-radius: 6px;
+        border: 1px solid #E2E8F0;
     }
     .tag-pill-match {
-        background-color: rgba(230, 43, 30, 0.2);
-        color: #FFAAA4;
-        border: 1px solid rgba(230, 43, 30, 0.5);
+        background-color: #FEF2F2;
+        color: #DC2626;
+        border: 1px solid #FCA5A5;
         font-weight: 600;
     }
+
+    /* Explainability Container */
     .explain-box {
-        background-color: #12151B;
-        border-left: 3px solid #E62B1E;
-        border-radius: 0 6px 6px 0;
-        padding: 6px 10px;
-        font-size: 0.75rem;
-        color: #9CA3AF;
+        background-color: #F8FAFC;
+        border-left: 3.5px solid #E62B1E;
+        border-radius: 0 8px 8px 0;
+        padding: 8px 12px;
+        font-size: 0.78rem;
+        color: #475569;
         margin-bottom: 12px;
+        line-height: 1.45;
     }
     .explain-box b {
-        color: #E5E7EB;
+        color: #0F172A;
     }
+
+    /* Watch Button */
     .watch-btn {
-        background-color: #E62B1E;
-        color: white !important;
+        background: linear-gradient(135deg, #E62B1E 0%, #C21F13 100%);
+        color: #FFFFFF !important;
         font-weight: 600;
-        font-size: 0.82rem;
-        padding: 6px 12px;
-        border-radius: 6px;
+        font-size: 0.84rem;
+        padding: 8px 14px;
+        border-radius: 8px;
         text-align: center;
         text-decoration: none;
         display: block;
-        transition: background-color 0.2s;
+        transition: opacity 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 6px rgba(230, 43, 30, 0.2);
     }
     .watch-btn:hover {
-        background-color: #C21F13;
+        opacity: 0.92;
+        box-shadow: 0 4px 12px rgba(230, 43, 30, 0.35);
+        color: #FFFFFF !important;
     }
 
-    /* Tabs Styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        border-bottom: 1px solid #374151;
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #FAFAFA;
+        border-right: 1px solid #E2E8F0;
     }
-    .stTabs [data-baseweb="tab"] {
-        font-weight: 600;
-        color: #9CA3AF;
-        padding: 8px 16px;
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0 16px 0;
+        margin-bottom: 14px;
+        border-bottom: 1.5px solid #E2E8F0;
     }
-    .stTabs [aria-selected="true"] {
-        color: #E62B1E !important;
-        border-bottom-color: #E62B1E !important;
+    .sidebar-badge {
+        background-color: #E62B1E;
+        color: #FFFFFF;
+        font-weight: 900;
+        font-size: 1.15rem;
+        padding: 3px 10px;
+        border-radius: 6px;
+    }
+    .sidebar-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #0F172A;
+    }
+    .sidebar-footer {
+        padding-top: 20px;
+        border-top: 1px solid #E2E8F0;
+        font-size: 0.78rem;
+        color: #64748B;
+        text-align: center;
+        margin-top: 20px;
     }
 </style>
 """
@@ -320,7 +382,6 @@ def get_hybrid_recommendations(
     """Computes top-N recommendations with normalized multi-signal scoring and explanations."""
     q = query_title.lower().strip()
     if q not in title_to_idx:
-        # Fuzzy match
         matches = [t for t in title_to_idx.keys() if q in t]
         if not matches:
             return None, None
@@ -354,7 +415,7 @@ def get_hybrid_recommendations(
 
     ranked_indices = np.argsort(final_scores)[::-1]
 
-    # Filter by duration if requested
+    # Filter by duration
     filtered_results = []
     for candidate_idx in ranked_indices:
         if candidate_idx == idx:
@@ -369,7 +430,6 @@ def get_hybrid_recommendations(
         elif duration_filter == "Deep Dive (> 18 min)" and dur <= 18:
             continue
 
-        # Explainability: shared tags
         shared_tags = query_tags.intersection(row["parsed_tags"])
         score_val = final_scores[candidate_idx]
 
@@ -395,7 +455,6 @@ def get_recommendations_by_tags(selected_tags: list, top_n: int = 6):
     scores = []
     for idx, row in df.iterrows():
         overlap = len(target_set.intersection(row["parsed_tags"]))
-        # score = overlap proportion + log views weighting
         jaccard = overlap / float(len(target_set.union(row["parsed_tags"])))
         score = jaccard * 0.70 + (np.log1p(row["views"]) / 20.0) * 0.30
         scores.append((idx, score, overlap))
@@ -413,69 +472,77 @@ def get_recommendations_by_tags(selected_tags: list, top_n: int = 6):
 
 
 # ==============================================================================
-# 5. SIDEBAR: RECOMMANDATION ENGINE CONTROLS
+# 5. SIDEBAR: CLEAN & WELL-ORGANIZED CONTROLS
 # ==============================================================================
 with st.sidebar:
+    # Top Clean Header
     st.markdown("""
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-            <span style="background:#E62B1E; color:white; font-weight:bold; padding:2px 8px; border-radius:4px;">TED</span>
-            <span style="font-size:1.1rem; font-weight:700; color:#F3F4F6;">Engine Controls</span>
+        <div class="sidebar-header">
+            <span class="sidebar-badge">TED</span>
+            <span class="sidebar-title">Recommender Control</span>
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("### ⚙️ Algorithm Selection")
+    st.markdown("#### ⚙️ Recommendation Strategy")
     strategy = st.radio(
-        "Choose Recommendation Strategy:",
+        "Select Model Type:",
         options=["Hybrid (Recommended)", "Content-Based (TF-IDF)", "Collaborative Filtering (SVD)"],
         index=0,
-        help="Hybrid combines textual semantic tags with viewer affinity patterns for optimal accuracy and serendipity."
+        label_visibility="collapsed",
+        help="Hybrid blends topic tag matching with viewer interaction patterns."
     )
 
     alpha_val = 0.70
     if strategy == "Hybrid (Recommended)":
-        st.markdown("### 🎚️ Hybrid Weighting ($\\alpha$)")
+        st.markdown("<div style='margin-top:14px; font-weight:700; font-size:0.88rem; color:#0F172A;'>🎚️ Hybrid Weighting (Content vs. Collab)</div>", unsafe_allow_html=True)
         alpha_val = st.slider(
-            "Content vs. Collaborative Blend:",
+            "Weighting (Alpha):",
             min_value=0.0,
             max_value=1.0,
             value=0.70,
             step=0.05,
-            help="1.0 = Pure Content-Based (Tags/Transcript). 0.0 = Pure Collaborative (SVD Viewers). 0.70 = Optimal Pareto Elbow."
+            label_visibility="collapsed"
         )
         col_c, col_cf = st.columns(2)
-        col_c.caption(f"📄 Content: **{int(alpha_val * 100)}%**")
-        col_cf.caption(f"🤝 Collab: **{int((1.0 - alpha_val) * 100)}%**")
+        col_c.markdown(f"<span style='font-size:0.8rem; color:#475569;'>📄 Content: <b>{int(alpha_val * 100)}%</b></span>", unsafe_allow_html=True)
+        col_cf.markdown(f"<span style='font-size:0.8rem; color:#475569;'>🤝 Collab: <b>{int((1.0 - alpha_val) * 100)}%</b></span>", unsafe_allow_html=True)
 
-    st.markdown("---")
-    st.markdown("### 🎯 Display & Filters")
+    st.markdown("<hr style='margin:18px 0; border:none; border-top:1px solid #E2E8F0;'/>", unsafe_allow_html=True)
+
+    st.markdown("#### 🎯 Filters & Display")
     top_n_count = st.slider("Number of Recommendations:", min_value=3, max_value=12, value=6, step=3)
 
     duration_choice = st.selectbox(
-        "Filter by Talk Duration:",
+        "Talk Duration:",
         options=["All Durations", "Quick (< 10 min)", "Standard (10–18 min)", "Deep Dive (> 18 min)"],
         index=0
     )
 
-    st.markdown("---")
-    st.caption("Infosys Springboard AI/ML Internship • Mohammed Shaheed")
+    st.markdown("""
+        <div class="sidebar-footer">
+            <b>Infosys Springboard AI/ML Internship</b><br>
+            Developer: <b>Shaheed Shaik</b><br>
+            <code>student/shaheed3515</code>
+        </div>
+    """, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# 6. HEADER HERO SECTION
+# 6. HEADER HERO SECTION (Visible & Prominent in Light Theme)
 # ==============================================================================
 st.markdown("""
-    <div class="ted-brand">
+    <div class="ted-brand-wrapper">
         <span class="ted-logo-badge">TED</span>
         <span class="ted-title-text">Personalized Talks Recommender</span>
     </div>
     <div class="ted-subtitle">
-        Intelligent Recommendation Engine powered by Hybrid Machine Learning (TF-IDF Natural Language Processing + TruncatedSVD Matrix Factorization).
+        Intelligent Recommendation Engine powered by Hybrid Machine Learning (TF-IDF NLP + TruncatedSVD Matrix Factorization).
     </div>
     <div class="stats-bar">
         <div class="stat-pill">📚 Catalog: <b>2,550 Talks</b></div>
-        <div class="stat-pill">🎯 Benchmark Precision@5: <b>41.56%</b></div>
+        <div class="stat-pill">🎯 Precision@5: <b>41.56%</b></div>
         <div class="stat-pill">📈 NDCG@10: <b>0.4039</b></div>
-        <div class="stat-pill">🌐 Intra-List Diversity: <b>0.8925</b></div>
+        <div class="stat-pill">🌐 Diversity: <b>0.8925</b></div>
         <div class="stat-pill">🛡️ Cold-Start: <b>Resilient</b></div>
     </div>
 """, unsafe_allow_html=True)
@@ -495,9 +562,8 @@ tab_talk, tab_topic, tab_insights = st.tabs([
 # TAB 1: RECOMMEND BY TALK
 # ------------------------------------------------------------------------------
 with tab_talk:
-    st.markdown("#### Enter a TED Talk you enjoyed to get personalized recommendations:")
+    st.markdown("<div style='font-size:0.95rem; font-weight:600; color:#334155; margin-bottom:6px;'>Enter a TED Talk you enjoyed to get personalized recommendations:</div>", unsafe_allow_html=True)
 
-    # Quick sample talk buttons
     famous_talks = [
         "Do schools kill creativity?",
         "Your body language may shape who you are",
@@ -506,17 +572,17 @@ with tab_talk:
         "How great leaders inspire action"
     ]
 
-    col_search, col_random = st.columns([4, 1])
+    col_search, col_random = st.columns([4.2, 1])
 
-    # Manage session state for selected talk
     if "selected_talk" not in st.session_state:
         st.session_state.selected_talk = famous_talks[0]
 
     with col_random:
-        st.write("")  # Alignment spacer
+        st.write("")
         st.write("")
         if st.button("🎲 Surprise Me!", use_container_width=True):
             st.session_state.selected_talk = random.choice(list(df["title"]))
+            st.rerun()
 
     with col_search:
         all_titles = list(df["title"])
@@ -527,10 +593,12 @@ with tab_talk:
             index=default_index,
             label_visibility="collapsed"
         )
-        st.session_state.selected_talk = chosen_title
+        if chosen_title != st.session_state.selected_talk:
+            st.session_state.selected_talk = chosen_title
+            st.rerun()
 
-    # Quick Chip Row
-    st.markdown("<div style='margin-bottom:8px; font-size:0.8rem; color:#9CA3AF;'>⚡ Or try popular talks:</div>", unsafe_allow_html=True)
+    # Quick Sample Talk Chips
+    st.markdown("<div style='margin-bottom:6px; font-size:0.8rem; color:#64748B;'>⚡ Quick picks (Famous Talks):</div>", unsafe_allow_html=True)
     chip_cols = st.columns(len(famous_talks))
     for i, ft in enumerate(famous_talks):
         with chip_cols[i]:
@@ -556,22 +624,16 @@ with tab_talk:
         st.markdown(f"""
             <div class="seed-card">
                 <span class="seed-badge">Input / Liked Talk</span>
-                <div style="font-size:1.25rem; font-weight:800; color:#FFFFFF; margin-bottom:4px;">
-                    {query_talk['title']}
-                </div>
-                <div style="color:#D1D5DB; font-size:0.9rem; margin-bottom:8px;">
-                    🎙️ <b>{query_talk['main_speaker']}</b> &nbsp;|&nbsp; ⏱️ {query_talk['duration_minutes']} min &nbsp;|&nbsp; 👁️ {q_views} views
-                </div>
-                <div style="color:#9CA3AF; font-size:0.85rem; line-height:1.4; margin-bottom:10px;">
-                    {query_talk['description']}
-                </div>
+                <div class="seed-title">{query_talk['title']}</div>
+                <div class="seed-speaker">🎙️ <b>{query_talk['main_speaker']}</b> &nbsp;|&nbsp; ⏱️ {query_talk['duration_minutes']} min &nbsp;|&nbsp; 👁️ {q_views} views</div>
+                <div class="seed-desc">{query_talk['description']}</div>
                 <div class="tag-container">{q_tag_html}</div>
             </div>
         """, unsafe_allow_html=True)
 
-        st.markdown(f"### 🎯 Top {len(recs)} Recommended Talks ({strategy})")
+        st.markdown(f"<div style='font-size:1.25rem; font-weight:800; color:#0F172A; margin: 24px 0 16px 0;'>🎯 Top {len(recs)} Recommended Talks ({strategy})</div>", unsafe_allow_html=True)
 
-        # Display Cards in Responsive Grid (3 columns)
+        # Responsive 3-Column Grid
         cols_per_row = 3
         for row_start in range(0, len(recs), cols_per_row):
             cols = st.columns(cols_per_row)
@@ -582,7 +644,6 @@ with tab_talk:
                     views_fmt = f"{item['views'] / 1e6:.1f}M" if item['views'] >= 1e6 else f"{item['views']:,}"
                     desc_snippet = (item['description'][:140] + "...") if len(str(item['description'])) > 140 else item['description']
 
-                    # Generate matched vs regular tag pills
                     tags_raw = ast.literal_eval(item['tags']) if isinstance(item['tags'], str) else item['tags']
                     tag_spans = []
                     for t in tags_raw[:5]:
@@ -592,7 +653,7 @@ with tab_talk:
                             tag_spans.append(f"<span class='tag-pill'>{t}</span>")
                     tags_html = "".join(tag_spans)
 
-                    # Explainability reason
+                    # Explainability text
                     if item['shared_tag_count'] > 0:
                         matched_str = ", ".join(item['shared_tags'][:3])
                         explain_text = f"<b>Why recommended:</b> Shares <b>{item['shared_tag_count']} core topics</b> with your talk (<i>{matched_str}</i>)."
@@ -622,26 +683,25 @@ with tab_talk:
                                 </div>
                             </div>
                         """, unsafe_allow_html=True)
-                        st.write("")  # Margin spacer
+                        st.write("")
 
 
 # ------------------------------------------------------------------------------
 # TAB 2: DISCOVER BY TOPICS & TAGS
 # ------------------------------------------------------------------------------
 with tab_topic:
-    st.markdown("#### Explore curated talks by selecting topics of interest:")
-
-    popular_presets = ["technology", "science", "design", "education", "psychology", "creativity", "business", "global issues", "health", "innovation"]
+    st.markdown("<div style='font-size:0.95rem; font-weight:600; color:#334155; margin-bottom:8px;'>Explore curated talks by selecting topics of interest:</div>", unsafe_allow_html=True)
 
     selected_tags = st.multiselect(
         "Choose one or more categories:",
         options=popular_tags,
-        default=["creativity", "education"]
+        default=["creativity", "education"],
+        label_visibility="collapsed"
     )
 
     if selected_tags:
         topic_recs = get_recommendations_by_tags(selected_tags, top_n=top_n_count)
-        st.markdown(f"### 🏷️ Top Talks for: *{', '.join(selected_tags)}*")
+        st.markdown(f"<div style='font-size:1.2rem; font-weight:800; color:#0F172A; margin: 20px 0 14px 0;'>🏷️ Top Talks for: <i>{', '.join(selected_tags)}</i></div>", unsafe_allow_html=True)
 
         cols_per_row = 3
         for row_start in range(0, len(topic_recs), cols_per_row):
@@ -687,7 +747,7 @@ with tab_topic:
 # TAB 3: ML MODEL INSIGHTS & BENCHMARKS (MODULE 5 SYNERGY)
 # ------------------------------------------------------------------------------
 with tab_insights:
-    st.markdown("### 📊 Module 5: Recommendation Quality Evaluation & Benchmark")
+    st.markdown("<div style='font-size:1.25rem; font-weight:800; color:#0F172A; margin-bottom:6px;'>📊 Module 5: Recommendation Quality Benchmark</div>", unsafe_allow_html=True)
     st.markdown("""
         To guarantee recommendation fidelity, we evaluated our recommendation engine against **257 validated test queries**
         using industry-standard Information Retrieval (IR) and ranking metrics.
@@ -706,8 +766,8 @@ with tab_insights:
     b_df = pd.DataFrame(benchmark_data)
     st.dataframe(b_df, use_container_width=True, hide_index=True)
 
-    st.markdown("---")
-    st.markdown("### 📈 Evaluation Plots & Visual Evidence")
+    st.markdown("<hr style='margin:20px 0; border:none; border-top:1px solid #E2E8F0;'/>", unsafe_allow_html=True)
+    st.markdown("#### 📈 Evaluation Plots & Visual Evidence")
 
     col_fig1, col_fig2 = st.columns(2)
     with col_fig1:
@@ -722,10 +782,10 @@ with tab_insights:
         if os.path.exists("docs/figures/14_model_tradeoff_radar.png"):
             st.image("docs/figures/14_model_tradeoff_radar.png", caption="Figure 14: Multi-Dimensional Trade-Off Radar Comparison", use_column_width=True)
 
-    st.markdown("---")
+    st.markdown("<hr style='margin:20px 0; border:none; border-top:1px solid #E2E8F0;'/>", unsafe_allow_html=True)
     st.markdown("""
         #### 🏆 Architectural Rationale for Hybrid Model (α = 0.70):
-        1. **Prevents the Filter Bubble:** Pure Content-Based models suffer from low diversity (0.8871), constantly suggesting identical vocabulary. SVD injects serendipitous cross-topic talks, raising diversity to **0.8925**.
+        1. **Prevents the Filter Bubble:** Pure Content-Based models suffer from lower diversity (0.8871), constantly suggesting identical vocabulary. SVD injects serendipitous cross-topic talks, raising diversity to **0.8925**.
         2. **Graceful Cold-Start Fallback:** Newly published talks with 0 ratings safely fall back to pure text features without throwing errors.
         3. **Transparent Explainability:** Textual grounding allows displaying intuitive *"Why Recommended"* badges with matched tags, building user trust.
     """)

@@ -2,7 +2,7 @@
 ## Project: Personalized TED Talks Recommendation System Using Machine Learning
 **Module:** Module 6 — Deployment via Streamlit App & Final Presentation  
 **Timeline:** Weeks 7–8  
-**Student:** Mohammed Shaheed (`student/shaheed3515`)  
+**Student:** Shaheed Shaik (`student/shaheed3515`)  
 **Status:** Milestone 4 Completed, Deployed & Fully Verified  
 
 ---

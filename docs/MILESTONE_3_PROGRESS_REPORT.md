@@ -2,7 +2,7 @@
 ## Project: Personalized TED Talks Recommendation System Using Machine Learning
 **Module:** Module 5 — Evaluation Metrics  
 **Timeline:** Weeks 5–6  
-**Student:** Mohammed Shaheed (`student/shaheed3515`)  
+**Student:** Shaheed Shaik (`student/shaheed3515`)  
 **Status:** Milestone 3 Completed & Verified  
 
 ---
