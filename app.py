@@ -81,7 +81,40 @@ st.markdown("""
         font-weight: 600 !important;
     }
 
-    /* 4. SELECTBOX & INPUT CONTRAST FIX */
+    /* 4. UNIVERSAL INPUT & SEARCH BAR STYLING (Guaranteed Visible Typing) */
+    input,
+    textarea,
+    .stTextInput input,
+    .stSelectbox input,
+    div[data-baseweb="input"] input,
+    div[data-baseweb="select"] input {
+        color: #0F172A !important;
+        background-color: #FFFFFF !important;
+        caret-color: #E62B1E !important; /* Bold red typing cursor */
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        -webkit-text-fill-color: #0F172A !important;
+        opacity: 1 !important;
+    }
+
+    .stTextInput div[data-baseweb="input"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .stTextInput div[data-baseweb="input"]:focus-within {
+        border-color: #E62B1E !important;
+        box-shadow: 0 0 0 3px rgba(230, 43, 30, 0.15) !important;
+    }
+
+    .stTextInput input::placeholder {
+        color: #94A3B8 !important;
+        -webkit-text-fill-color: #94A3B8 !important;
+        font-weight: 400 !important;
+    }
+
     .stSelectbox div[data-baseweb="select"] > div {
         background-color: #FFFFFF !important;
         border: 1.5px solid #CBD5E1 !important;
@@ -297,6 +330,29 @@ def get_recommendations_by_tags(selected_tags: list, top_n: int = 6):
     return results
 
 
+def find_matching_talks(query: str, limit: int = 25):
+    """
+    Intelligent multi-field search engine across Titles, Speakers, and Tags.
+    Allows users to freely type any keyword, speaker name, or topic.
+    """
+    if not query or not str(query).strip():
+        return []
+    q = str(query).strip().lower()
+
+    # Priority 1: Exact or substring match in Title
+    t_matches = df[df["title"].str.lower().str.contains(q, na=False, regex=False)]
+
+    # Priority 2: Match in Speaker name
+    s_matches = df[df["main_speaker"].str.lower().str.contains(q, na=False, regex=False)]
+
+    # Priority 3: Match in Tags
+    tag_matches = df[df["tags"].str.lower().str.contains(q, na=False, regex=False)]
+
+    # Merge preserving relevance order, drop duplicate titles
+    combined = pd.concat([t_matches, s_matches, tag_matches]).drop_duplicates(subset=["title"])
+    return list(combined["title"].head(limit))
+
+
 # ==============================================================================
 # 5. SIDEBAR: ORGANIZED & HIGH-CONTRAST CONTROLS
 # ==============================================================================
@@ -397,8 +453,6 @@ tab_talk, tab_topic, tab_insights = st.tabs([
 # TAB 1: RECOMMEND BY TALK
 # ------------------------------------------------------------------------------
 with tab_talk:
-    st.markdown("<div style='font-size:0.96rem; font-weight:700; color:#0F172A; margin-bottom:6px;'>Enter a TED Talk you enjoyed to get personalized recommendations:</div>", unsafe_allow_html=True)
-
     famous_talks = [
         "Do schools kill creativity?",
         "Your body language may shape who you are",
@@ -407,38 +461,75 @@ with tab_talk:
         "How great leaders inspire action"
     ]
 
-    col_search, col_random = st.columns([4.2, 1])
-
     if "selected_talk" not in st.session_state:
         st.session_state.selected_talk = famous_talks[0]
 
+    st.markdown("<div style='font-size:0.96rem; font-weight:700; color:#0F172A; margin-bottom:8px;'>🔍 Search any TED Talk by Title, Speaker, or Topic:</div>", unsafe_allow_html=True)
+
+    col_search, col_random = st.columns([4.2, 1])
+
     with col_random:
-        st.write("")
-        st.write("")
         if st.button("🎲 Surprise Me!", use_container_width=True):
             st.session_state.selected_talk = random.choice(list(df["title"]))
+            if "search_bar_input" in st.session_state:
+                st.session_state.search_bar_input = ""
             st.rerun()
 
     with col_search:
-        all_titles = list(df["title"])
-        default_index = all_titles.index(st.session_state.selected_talk) if st.session_state.selected_talk in all_titles else 0
-        chosen_title = st.selectbox(
-            "Select or search from 2,550 curated talks:",
-            options=all_titles,
-            index=default_index,
-            label_visibility="collapsed"
+        search_val = st.text_input(
+            "Search for a talk:",
+            placeholder="Type speaker, topic, or title (e.g., Ken Robinson, creativity, happiness, AI)...",
+            label_visibility="collapsed",
+            key="search_bar_input"
         )
-        if chosen_title != st.session_state.selected_talk:
-            st.session_state.selected_talk = chosen_title
-            st.rerun()
+
+    # Dynamic Search Filter
+    query_str = search_val.strip() if search_val else ""
+    if query_str:
+        matched_talks = find_matching_talks(query_str, limit=20)
+        if matched_talks:
+            st.markdown(f"<div style='font-size:0.84rem; font-weight:700; color:#475569; margin: 4px 0 2px 0;'>🎯 Found {len(matched_talks)} talks matching <span style='color:#E62B1E;'>\"{query_str}\"</span> — choose one:</div>", unsafe_allow_html=True)
+            sel_idx = matched_talks.index(st.session_state.selected_talk) if st.session_state.selected_talk in matched_talks else 0
+            chosen_match = st.selectbox(
+                "Select from search results:",
+                options=matched_talks,
+                index=sel_idx,
+                label_visibility="collapsed",
+                key="search_results_dropdown"
+            )
+            if chosen_match != st.session_state.selected_talk:
+                st.session_state.selected_talk = chosen_match
+                st.rerun()
+            elif st.session_state.selected_talk not in matched_talks:
+                st.session_state.selected_talk = matched_talks[0]
+                st.rerun()
+        else:
+            st.info(f"💡 No talks found directly matching \"{query_str}\". Try searching by speaker name (e.g. 'Ken Robinson'), or select from the popular talks below.")
+    else:
+        # Quick expandable catalog browser for convenience
+        with st.expander("📚 Or browse all 2,550 curated talks alphabetically", expanded=False):
+            all_titles = sorted(list(df["title"]))
+            default_index = all_titles.index(st.session_state.selected_talk) if st.session_state.selected_talk in all_titles else 0
+            chosen_title = st.selectbox(
+                "Catalog list:",
+                options=all_titles,
+                index=default_index,
+                label_visibility="collapsed",
+                key="catalog_browser_select"
+            )
+            if chosen_title != st.session_state.selected_talk:
+                st.session_state.selected_talk = chosen_title
+                st.rerun()
 
     # Quick Picks
-    st.markdown("<div style='margin-bottom:6px; font-size:0.8rem; color:#64748B; font-weight:600;'>⚡ Popular benchmark talks:</div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:10px; margin-bottom:6px; font-size:0.8rem; color:#64748B; font-weight:600;'>⚡ Popular benchmark talks:</div>", unsafe_allow_html=True)
     chip_cols = st.columns(len(famous_talks))
     for i, ft in enumerate(famous_talks):
         with chip_cols[i]:
             if st.button(ft, key=f"chip_{i}", use_container_width=True):
                 st.session_state.selected_talk = ft
+                if "search_bar_input" in st.session_state:
+                    st.session_state.search_bar_input = ""
                 st.rerun()
 
     # Recommendations
