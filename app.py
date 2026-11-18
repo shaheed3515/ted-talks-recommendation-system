@@ -330,6 +330,7 @@ def load_recommender_system():
         st.stop()
 
     df = pd.read_csv(data_path)
+    df["url"] = df["url"].astype(str).str.strip()
 
     # Pre-parse tags list
     tags_list = []
@@ -628,6 +629,9 @@ with tab_talk:
                 <div class="seed-speaker">🎙️ <b>{query_talk['main_speaker']}</b> &nbsp;|&nbsp; ⏱️ {query_talk['duration_minutes']} min &nbsp;|&nbsp; 👁️ {q_views} views</div>
                 <div class="seed-desc">{query_talk['description']}</div>
                 <div class="tag-container">{q_tag_html}</div>
+                <div style="margin-top:10px;">
+                    <a class="watch-btn" style="display:inline-block; padding:7px 16px;" href="{query_talk['url']}" target="_blank">▶ Watch this talk on TED.com</a>
+                </div>
             </div>
         """, unsafe_allow_html=True)
 
