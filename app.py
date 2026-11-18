@@ -44,14 +44,69 @@ st.markdown("""
         background-color: #F8F9FA !important;
     }
 
-    /* 1. HIDE STREAMLIT DEFAULT HEADER & RECLAIM TOP SCREEN SPACE */
-    header[data-testid="stHeader"], [data-testid="stHeader"] {
-        display: none !important;
-        height: 0px !important;
+    /* 1. HEADER: 100% Transparent, No Black Bar, Click-Through */
+    header[data-testid="stHeader"] {
         background: transparent !important;
-        visibility: hidden !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        height: auto !important;
+        pointer-events: none !important; /* Allow clicks to pass through empty header area */
+        z-index: 9999 !important;
     }
-    [data-testid="stToolbar"],
+
+    [data-testid="stToolbar"] {
+        background: transparent !important;
+        pointer-events: none !important;
+    }
+
+    /* 2. RE-OPEN / EXPAND SIDEBAR BUTTON - Prominently Visible on Top-Left */
+    [data-testid="stExpandSidebarButton"] {
+        display: inline-flex !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+        margin-top: 6px !important;
+        margin-left: 8px !important;
+        padding: 4px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+
+    [data-testid="stExpandSidebarButton"]:hover {
+        background-color: #FEF2F2 !important;
+        border-color: #E62B1E !important;
+        transform: scale(1.08) !important;
+    }
+
+    [data-testid="stExpandSidebarButton"] button {
+        pointer-events: auto !important;
+        color: #E62B1E !important;
+    }
+
+    [data-testid="stExpandSidebarButton"] svg,
+    [data-testid="stExpandSidebarButton"] span {
+        fill: #E62B1E !important;
+        stroke: #E62B1E !important;
+        color: #E62B1E !important;
+    }
+
+    /* Collapse Sidebar Button (Inside Sidebar Header) */
+    [data-testid="stSidebarCollapseButton"] {
+        display: inline-flex !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    /* 3. HIDE ONLY DEPLOY BUTTON AND HAMBURGER MENU */
+    [data-testid="stAppDeployButton"],
+    [data-testid="stMainMenu"],
+    [data-testid="stMainMenuButton"],
+    [data-testid="stStatusWidget"],
+    [data-testid="stToolbarActions"],
     [data-testid="stDecoration"],
     #MainMenu,
     footer {
