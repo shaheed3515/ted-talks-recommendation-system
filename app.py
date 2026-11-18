@@ -126,6 +126,21 @@ st.markdown("""
         background-color: #FFFFFF !important;
         border-right: 1.5px solid #E2E8F0 !important;
     }
+    [data-testid="stSidebarUserContent"] {
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: calc(100vh - 4.5rem) !important;
+        padding-bottom: 1.5rem !important;
+    }
+    .sidebar-footer-card {
+        margin-top: auto !important;
+        background: #F8FAFC !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+        padding: 14px 16px !important;
+        text-align: center !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    }
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] span,
@@ -453,12 +468,17 @@ with st.sidebar:
         index=0
     )
 
-    st.markdown("<hr style='margin:20px 0 14px 0; border:none; border-top:1px solid #E2E8F0;'/>", unsafe_allow_html=True)
     st.markdown("""
-        <div style="text-align:center; font-size:0.8rem; color:#64748B; line-height:1.5;">
-            <b>Infosys Springboard AI/ML Internship</b><br>
-            Developer: <b style="color:#0F172A;">Shaheed Shaik</b><br>
-            <code style="background:#F1F5F9; padding:2px 6px; border-radius:4px; font-size:0.75rem;">student/shaheed3515</code>
+        <div class="sidebar-footer-card">
+            <div style="font-size:0.75rem; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:3px;">
+                Infosys Springboard
+            </div>
+            <div style="font-size:0.86rem; font-weight:800; color:#0F172A; margin-bottom:3px;">
+                AI/ML Internship Project
+            </div>
+            <div style="font-size:0.82rem; font-weight:600; color:#475569;">
+                Developer: <b style="color:#E62B1E;">Shaheed Shaik</b>
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
