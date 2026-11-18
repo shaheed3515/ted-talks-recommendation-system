@@ -36,28 +36,64 @@ st.markdown("""
     /* Global Typography */
     html, body, [class*="css"], .stMarkdown {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
-        color: #1E293B !important;
+        color: #0F172A !important;
     }
 
-    /* Force Light Page Background */
+    /* Force Clean Page Background */
     .stApp {
         background-color: #F8F9FA !important;
     }
 
-    /* Main Container Spacing */
+    /* 1. HIDE STREAMLIT DEFAULT HEADER & RECLAIM TOP SCREEN SPACE */
+    header[data-testid="stHeader"], [data-testid="stHeader"] {
+        display: none !important;
+        height: 0px !important;
+        background: transparent !important;
+        visibility: hidden !important;
+    }
+    [data-testid="stToolbar"],
+    [data-testid="stDecoration"],
+    #MainMenu,
+    footer {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* 2. MAIN CONTAINER SPACING - TED Logo 100% visible with clean margin */
     .block-container {
-        padding-top: 1.2rem !important;
-        padding-bottom: 2.5rem !important;
+        padding-top: 2.0rem !important;
+        padding-bottom: 3.5rem !important;
         max-width: 1250px !important;
     }
 
-    /* Sidebar Styling */
+    /* 3. SIDEBAR STYLING & HIGH CONTRAST TEXT */
     [data-testid="stSidebar"] {
         background-color: #FFFFFF !important;
         border-right: 1.5px solid #E2E8F0 !important;
     }
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    div[role="radiogroup"] label div,
+    div[role="radiogroup"] label p,
+    div[role="radiogroup"] label span {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+    }
 
-    /* Card Hover Animations */
+    /* 4. SELECTBOX & INPUT CONTRAST FIX */
+    .stSelectbox div[data-baseweb="select"] > div {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        color: #0F172A !important;
+    }
+    .stSelectbox div[data-baseweb="select"] span {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+    }
+
+    /* 5. CARD HOVER ANIMATIONS */
     .rec-card-box {
         background: #FFFFFF !important;
         border: 1.5px solid #E2E8F0 !important;
@@ -73,7 +109,7 @@ st.markdown("""
         box-shadow: 0 12px 20px -2px rgba(230, 43, 30, 0.12) !important;
     }
 
-    /* Tabs Styling */
+    /* 6. TABS STYLING */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px !important;
         border-bottom: 2px solid #E2E8F0 !important;
@@ -89,7 +125,7 @@ st.markdown("""
         border-bottom-color: #E62B1E !important;
     }
 
-    /* Button Styling */
+    /* 7. BUTTON STYLING */
     .watch-button {
         background-color: #E62B1E !important;
         color: #FFFFFF !important;
