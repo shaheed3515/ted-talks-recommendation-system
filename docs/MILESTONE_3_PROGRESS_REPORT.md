@@ -2,7 +2,7 @@
 ## Project: Personalized TED Talks Recommendation System Using Machine Learning
 **Module:** Module 5 — Evaluation Metrics  
 **Timeline:** Weeks 5–6  
-**Student:** Shaheed Shaik (`student/shaheed3515`)  
+**Student:** Shaheed Shaik  
 **Status:** Milestone 3 Completed & Verified  
 
 ---
@@ -86,7 +86,7 @@ The four recommendation approaches were evaluated under identical test condition
 
 ## 5. Hyperparameter Sensitivity: Tuning the Hybrid Weight ($\alpha$)
 
-To determine the mathematically optimal balance between content relevance and collaborative discovery, we conducted an empirical parameter sweep across $\alpha \in [0.0, 1.0]$ in steps of 0.1:
+To determine the mathematically optimal balance between content relevance and collaborative discovery, an empirical parameter sweep was conducted across $\alpha \in [0.0, 1.0]$ in steps of 0.1:
 
 $$\mathbf{S}_{\text{hybrid}} = \alpha \cdot \mathbf{S}_{\text{content}} + (1 - \alpha) \cdot \mathbf{S}_{\text{collab}}$$
 

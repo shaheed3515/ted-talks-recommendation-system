@@ -240,7 +240,7 @@ def generate_html_report(output_html: str = "docs/Module_1_Data_Collection_Repor
 <h2>3. Key Exploratory Analysis: Topics & Distributions</h2>
 
 <h3>3.1 Topic Diversity (Topics per Video)</h3>
-<p>Each TED Talk is tagged with multiple conceptual labels (e.g. <em>technology, creativity, design, science</em>). Our analysis revealed:</p>
+<p>Each TED Talk is tagged with multiple conceptual labels (e.g. <em>technology, creativity, design, science</em>). The analysis revealed:</p>
 <ul>
     <li><strong>Average topics per video:</strong> 7.5 tags per talk (Median: 6 tags).</li>
     <li><strong>Topic range:</strong> From 1 tag up to 32 tags per video.</li>
@@ -270,7 +270,7 @@ def generate_html_report(output_html: str = "docs/Module_1_Data_Collection_Repor
 </div>
 
 <h3>4.2 Natural Speech Rate Verification</h3>
-<p>By comparing the spoken word count from transcripts against duration in minutes, we validated an average speaking rate of <strong>148 Words Per Minute (WPM)</strong>. This aligns with standard public speaking research (130–160 WPM), validating that transcripts are accurate and uncorrupted.</p>
+<p>By comparing the spoken word count from transcripts against duration in minutes, the evaluation validated an average speaking rate of <strong>148 Words Per Minute (WPM)</strong>. This aligns with standard public speaking research (130–160 WPM), validating that transcripts are accurate and uncorrupted.</p>
 
 <div class="chart-container">
     <img src="{img_accuracy}" alt="Speech Rate Accuracy" />
@@ -280,7 +280,7 @@ def generate_html_report(output_html: str = "docs/Module_1_Data_Collection_Repor
 <div class="page-break"></div>
 
 <h2>5. Data Quality Audit (The 4 Dimensions)</h2>
-<p>To eliminate <em>Garbage In – Garbage Out (GIGO)</em>, we evaluated all 18 attributes against the four core Data Quality Dimensions:</p>
+<p>To eliminate <em>Garbage In – Garbage Out (GIGO)</em>, all 18 attributes were evaluated against the four core Data Quality Dimensions:</p>
 
 <div class="chart-container">
     <img src="{img_completeness}" alt="Completeness Audit" />

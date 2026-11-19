@@ -783,7 +783,7 @@ with tab_topic:
 with tab_insights:
     st.markdown("<div style='font-size:1.25rem; font-weight:850; color:#0F172A; margin-bottom:6px;'>📊 Module 5: Recommendation Quality Benchmark</div>", unsafe_allow_html=True)
     st.markdown("""
-        To guarantee recommendation fidelity, we evaluated our recommendation engine against **257 validated test queries**
+        To guarantee recommendation fidelity, the recommendation engine was evaluated against **257 validated test queries**
         using industry-standard Information Retrieval (IR) and ranking metrics.
     """)
 

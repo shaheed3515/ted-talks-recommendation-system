@@ -21,7 +21,7 @@ Building on the 2,550 cleaned TED Talks produced in Milestone 1, this milestone 
 ## 2. Module 3: Feature Engineering & Vectorization
 
 ### 2.1 Text Numerical Representation & Content Soup
-To ensure the recommendation system captures both broad themes and fine-grained spoken arguments, we engineered a unified text representation:
+To ensure the recommendation system captures both broad themes and fine-grained spoken arguments, a unified text representation was engineered:
 $$\text{combined\_content} = \text{main\_speaker} + \text{title} + \text{tags\_string} + \text{description} + \text{cleaned\_transcript}$$
 
 This combines:
@@ -32,7 +32,7 @@ This combines:
 ---
 
 ### 2.2 Vectorization Technique Evaluation & Architecture Choice
-We evaluated three vectorization paradigms to establish the most effective representation for our dataset:
+Three vectorization paradigms were evaluated to establish the most effective representation for the dataset:
 
 | Vectorization Technique | Architecture & Mechanism | Key Strengths | Limitations | Project Decision |
 | :--- | :--- | :--- | :--- | :--- |
@@ -63,7 +63,7 @@ Executing vectorization across all 2,550 talks produced:
 ---
 
 ### 2.5 Feature Importance & Model Interpretability
-To ensure transparent, explainable recommendations, we extracted the top weighted TF-IDF terms for benchmark talks:
+To ensure transparent, explainable recommendations, the top weighted TF-IDF terms were extracted for benchmark talks:
 
 ```
 1. Ken Robinson: "Do schools kill creativity?"
@@ -92,7 +92,7 @@ These top features confirm that the numerical vectors accurately capture the cor
 ## 3. Collaborative Filtering — Interaction Matrices
 
 ### 3.1 Real Audience Emotional Interaction Profile
-We parsed and normalized the 14 audience rating dimensions recorded on TED.com:
+The 14 audience rating dimensions recorded on TED.com were parsed and normalized:
 * Categories: *Inspiring, Funny, Fascinating, Persuasive, Courageous, Informative, Ingenious, Jaw-dropping, Beautiful, Confusing, Longwinded, OK, Obnoxious, Unconvincing*.
 * Output: A normalized $2,550 \times 14$ interaction matrix profiling audience perception per talk.
 * Finding: The top 3 most prevalent ratings across all talks are **Inspiring (24.8%)**, **Informative (18.6%)**, and **Fascinating (16.2%)**.
@@ -100,7 +100,7 @@ We parsed and normalized the 14 audience rating dimensions recorded on TED.com:
 ### 3.2 Sparse User–Item Interaction Matrix (`scipy.sparse.csr_matrix`)
 In collaborative filtering, interaction matrices are inherently sparse because users interact with only a tiny fraction of total items.
 
-We modeled an interaction matrix for 1,000 active users across all 2,550 talks:
+An interaction matrix was modeled for 1,000 active users across all 2,550 talks:
 - **Matrix Shape:** $1,000 \text{ users} \times 2,550 \text{ talks}$
 - **Total Possible Matrix Cells:** $2,550,000$ cells
 - **Observed User Interactions:** $18,000$ interactions
